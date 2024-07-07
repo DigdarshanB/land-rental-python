@@ -1,0 +1,5 @@
+101,Manang,North,5,30000,Available
+102,Lalitpur,South,3,60000,Available
+103,Pokhara,East,4,50000,Available
+104,Kavre,South,10,80000,Not Available
+105,Bhaktapur,West,5,80000,Available
