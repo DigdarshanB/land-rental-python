@@ -2,12 +2,34 @@ import datetime
 
 def display_available_lands(lands):
     """This function displays available lands from the text file"""
+    # Determine the width of each column
+    max_lengths = {
+        'kitta_number': len('Kitta No.'),
+        'city': len('City/District'),
+        'direction': len('Direction'),
+        'area': len('Area'),
+        'price': len('Price'),
+        'status': len('Status')
+    }
+    
+    for land in lands:
+        max_lengths['kitta_number'] = max(max_lengths['kitta_number'], len(str(land['kitta_number'])))
+        max_lengths['city'] = max(max_lengths['city'], len(land['city']))
+        max_lengths['direction'] = max(max_lengths['direction'], len(land['direction']))
+        max_lengths['area'] = max(max_lengths['area'], len(str(land['area'])))
+        max_lengths['price'] = max(max_lengths['price'], len(str(land['price'])))
+        max_lengths['status'] = max(max_lengths['status'], len(land['status']))
+    
+    # Print the header
     print("Available Lands:\n")
-    print("Kitta No.\tCity/District\tDirection\tArea\tPrice\tStatus")
+    header = f"{'Kitta No.':<{max_lengths['kitta_number']}}\t{'City/District':<{max_lengths['city']}}\t{'Direction':<{max_lengths['direction']}}\t{'Area':<{max_lengths['area']}}\t{'Price':<{max_lengths['price']}}\t{'Status':<{max_lengths['status']}}"
+    print(header)
+    print('-' * len(header))
+    
+    # Print the land data
     for land in lands:
         if land['status'] == 'Available':
-            print(f"{land['kitta_number']}\t\t{land['city']}\t\t{land['direction']}\t\t{land['area']}\t\t{land['price']}\t\t{land['status']}")
-
+            print(f"{land['kitta_number']:<{max_lengths['kitta_number']}}\t{land['city']:<{max_lengths['city']}}\t{land['direction']:<{max_lengths['direction']}}\t{land['area']:<{max_lengths['area']}}\t{land['price']:<{max_lengths['price']}}\t{land['status']:<{max_lengths['status']}}")
 
 def rent_land(lands, customer_name, duration):
     """Description of the function:
@@ -19,10 +41,7 @@ def rent_land(lands, customer_name, duration):
     rented_lands = []
     total_amount = 0
     print("Available Lands:\n")
-    print("Kitta No.\tCity/District\tDirection\tArea\tPrice\tStatus\n")
-    for land in lands:
-        if land['status'] == 'Available':
-            print(f"{land['kitta_number']}\t\t{land['city']}\t\t{land['direction']}\t\t{land['area']}\t\t{land['price']}\t\t{land['status']}\n")
+    display_available_lands(lands)
     while True:
         kitta_number = input("Enter the kitta number of the land you want to rent (or type 'exit' to cancel): ")
         if kitta_number.lower() == 'exit':
@@ -33,9 +52,9 @@ def rent_land(lands, customer_name, duration):
                     rented_duration = duration
                     current_datetime = datetime.datetime.now()
                     rent_datetime = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
-                    total_amount +=  rented_duration * land['price'] # (a+=b == a+b, a+=b+c == a+b+c)
+                    total_amount += rented_duration * land['price']
                     land['status'] = 'Not Available'
-                    land['rent_date'] = rent_datetime 
+                    land['rent_date'] = rent_datetime
                     rented_lands.append(land)
                     print(f"Land with kitta number {kitta_number} rented successfully.")
                     more_lands = input("Do you want to rent more land? (yes/no): ")
@@ -59,7 +78,6 @@ def rent_land(lands, customer_name, duration):
             else:
                 print("Invalid kitta number. Please try again.")
 
-
 def return_land(lands):
     """Description of the function:
     -lands is taken as the parameter
@@ -72,10 +90,7 @@ def return_land(lands):
     total_amount = 0
     total_fine = 0
     print("Rented Lands:")
-    print("Kitta No.\tCity/District\tDirection\tArea\tPrice\tStatus")
-    for land in lands:
-        if land['status'] == 'Not Available':
-            print(f"{land['kitta_number']}\t\t{land['city']}\t\t{land['direction']}\t\t{land['area']}\t\t{land['price']}\t\t{land['status']}")
+    display_available_lands(lands)
     while True:
         kitta_number = input("Enter the kitta number of the land you want to return (or type 'exit' to cancel): ")
         if kitta_number.lower() == 'exit':
@@ -89,18 +104,18 @@ def return_land(lands):
                         current_datetime = datetime.datetime.now()
                         return_datetime = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
                         rent_datetime = land.get('rent_date')
-                        if rent_datetime: 
+                        if rent_datetime:
                             rent_date = datetime.datetime.strptime(rent_datetime, '%Y-%m-%d %H:%M:%S')
                             rented_duration = (current_datetime.year - rent_date.year) * 12 + current_datetime.month - rent_date.month
                             if rented_duration < 1:
-                                rented_duration = 1 
+                                rented_duration = 1
                             fine_months = (current_datetime.year - rent_date.year) * 12 + current_datetime.month - rent_date.month - rented_duration
                             if fine_months > 0:
                                 fine_price = 0.1 * fine_months * land['price']
                                 total_fine += fine_price
                             total_amount += rented_duration * land['price']
                             returned_lands.append(land)
-                        land['status'] = 'Available' 
+                        land['status'] = 'Available'
                         print(f"Land with kitta number {kitta_number} returned successfully.")
                         techno_prop_invoice_name = f"Return_Invoice_{current_datetime.strftime('%Y-%m-%d_%H-%M-%S')}.txt"
                         with open(techno_prop_invoice_name, 'w') as techno_prop_invoice:
@@ -125,4 +140,3 @@ def return_land(lands):
             if not found_land:
                 print("This land does not exist in the system.")
                 return
-

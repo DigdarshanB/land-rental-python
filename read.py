@@ -1,7 +1,7 @@
 def read_land_data(file_name):
     """
     This function reads the text file and returns a list of dictionary
-    that contains information about lands. 
+    that contains information about lands.
     """
     
     land_data = []
@@ -20,5 +20,5 @@ def read_land_data(file_name):
     except FileNotFoundError:
         print("Error: File not found.")
     except Exception as e:
-        print(f" An error occurred: {str(e)}")
+        print(f"An error occurred: {str(e)}")
     return land_data

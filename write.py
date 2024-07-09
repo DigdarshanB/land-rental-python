@@ -10,4 +10,3 @@ def write_land_data(file_name, land_data):
                 file.write(f"{land['kitta_number']},{land['city']},{land['direction']},{land['area']},{land['price']},{land['status']}\n")
     except Exception as e:
         print(f"An error occurred: {str(e)}")
-

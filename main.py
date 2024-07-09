@@ -15,7 +15,10 @@ def main():
     file_name = "land_info.txt"
     lands = read_land_data(file_name)
     while True:
-        print("\nWelcome to TechnoPropertyNepal Land Rental System\n")
+        print("----------------TechnoPropertyNepal----------------- \n")
+        print("\t\tSanothimi, Bhaktapur\n")
+        print("\t\tContact: 9843887532")
+        print("----------------------------------------------------\n\n")
         display_available_lands(lands)
         print("\nMenu:")
         print("1. Rent Land")
@@ -41,4 +44,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
